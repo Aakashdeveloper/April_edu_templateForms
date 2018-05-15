@@ -1,22 +1,58 @@
 <h1>AnguLar Forms</h1>
-<form #form="ngForm" novalidate>
+<form #form="ngForm" novalidate (submit)="submitForm(form)">
     <div class="panel panel-primary">
         <div class="panel-heading">
             Angular Forms
         </div>
         <div class="panel-body">
-            <div class="form-group">
-                <label for="firstName">FirstName</label>
+            <div class="form-group" [class.has-error]="firstName.invalid">
+                <label class="control-label" for="firstName">FirstName</label>
                 <input class="form-control"  type="text" name="firstName"
                  [ngModel]="model.firstName"
                  (ngModelChange)="firstToUpper($event)"  
+                 #firstName="ngModel"
                 placeholder="firstName" id="firstName" required/>
+                <div class="alert alert-danger" *ngIf="firstName.invalid">
+                    FirstName is required
+                </div>
+            </div>     
+            <h3>Classes</h3>
+            <h3>{{firstName.invalid}}</h3>
+            <div class="form-group" [class.has-error]="password.invalid">
+                <label class="control-label" for="password">Password</label>
+                <input class="form-control"  type="password" name="password"
+                 [(ngModel)]="model.password" 
+                 #password="ngModel"
+                placeholder="password" id="password" minlength="5"/>
+                <div class="alert alert-danger" *ngIf="password.invalid">
+                    Min length of password should be 5
+                </div>
             </div>
             <div class="form-group">
                 <label for="lastName">LastName</label>
                 <input class="form-control"  type="text" name="lastName" 
                 [(ngModel)]="model.lastName"  
                 placeholder="lastName" id="lastName"/>
+            </div>
+            <div class="form-group" [class.has-error]="email.invalid">
+                <label class="control-label" for="email">Email</label>
+                <input class="form-control"  type="email" name="email"
+                 [(ngModel)]="model.email" 
+                 #email="ngModel"
+                placeholder="email" id="email" pattern="^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$"/>
+                <div class="alert alert-danger" *ngIf="email.invalid">
+                    Please enter valid email
+                </div>
+            </div>
+            <div class="form-group" [class.has-error]="phone.invalid">
+                <label class="control-label" for="phone">phone</label>
+                <input class="form-control"  type="phone" name="phone"
+                 [(ngModel)]="model.phone" 
+                 #phone="ngModel"
+                placeholder="phone" id="phone" pattern="[0-9]{10}"/>
+                <div class="alert alert-danger" *ngIf="phone.invalid">
+                    Please enter valid phonenumber
+                </div>
             </div>
             <div class="checkbox">
                 <label>
@@ -33,16 +69,22 @@
                     <input type="radio" name="gender" value="male" [(ngModel)]="model.gender">Male
                 </label>
             </div>
-            <div class="form-group">
+            <div class="form-group" [class.has-error]="hasCodeLangError">
                 <label>Code lang</label>
-                <select class="form-control" name="codeLang" [(ngModel)]="model.codeLang">
+                <select class="form-control" name="codeLang" 
+                [(ngModel)]="model.codeLang" (blur)="validateCodeLang($event)">
+                    <option value="default">Please Select lang</option>
                     <option *ngFor="let lang of languages">
                         {{lang}}
                     </option>
                     
                 </select>
+                <div class="alert alert-danger" *ngIf="hasCodeLangError">
+                    Select proper option
+                </div>
             </div>
-            <button class="btn btn-success" type="submit">Submit</button>
+            <button class="btn btn-success" type="submit"
+            [disabled]="submitDisable">Submit</button>
         </div>
     </div>
 
